@@ -1,4 +1,31 @@
 CompileFlags:
-  CompilationDatabase: build/debug
+  CompilationDatabase: build/gcc16/debug
   # GCC module/dependency flags are not understood by clangd's Clang parser.
-  Remove: [-fmodules-ts, -fdeps-format=*, -fmodule-mapper=*]
+  Remove: [-fmodules-ts, -freflection, -fdeps-format=*, -fmodule-mapper=*]
+---
+If:
+  PathMatch: .*[.](cpp|cppm|cc|cxx|hpp|hxx)
+CompileFlags:
+  # Relative to the selected compilation database's build/gcc16/debug directory.
+  Add:
+    - -std=c++26
+    - --target=x86_64-w64-windows-gnu
+    - -isystem
+    - ../../../.tools/gcc16/mingw64/include/c++/16.2.0
+    - -isystem
+    - ../../../.tools/gcc16/mingw64/include/c++/16.2.0/x86_64-w64-mingw32
+    - -isystem
+    - ../../../.tools/gcc16/mingw64/include/c++/16.2.0/backward
+    - -isystem
+    - ../../../.tools/gcc16/mingw64/x86_64-w64-mingw32/include
+---
+If:
+  PathMatch: src/main[.]cpp
+Diagnostics:
+  # Stock clangd cannot parse GCC's C++26 reflection; GCC remains the checker.
+  Suppress:
+    - no_member
+    - nonfunction_block_type
+    - expected_expression
+    - blocks_disable
+    - typename_requires_specqual

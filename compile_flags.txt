@@ -1,3 +1,4 @@
--std=c++2c
+-std=c++26
+-freflection
 -isystem
 vendor
