@@ -1,0 +1,41 @@
+Checks: >
+  -*
+  ,clang-analyzer-*
+  ,bugprone-*
+  ,performance-*
+  ,portability-*
+  ,readability-braces-around-statements
+  ,readability-identifier-naming
+  ,readability-isolate-declaration
+  ,readability-redundant-declaration
+  ,readability-inconsistent-declaration-parameter-name
+  ,cert-*
+  ,-cert-err58-cpp
+  ,-cert-dcl37-c
+  ,-cert-dcl51-cpp
+
+CheckOptions:
+  # Functions (camelCase)
+  - key: readability-identifier-naming.FunctionCase
+    value: camelCase
+
+  # Struct Types (PascalCase / Capitalized)
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.TypedefCase
+    value: CamelCase
+
+  # Identifiers, Variables, and Struct Members (snake_case)
+  - key: readability-identifier-naming.VariableCase
+    value: lower_case
+  - key: readability-identifier-naming.ParameterCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case
+
+  # Constants and Macros (UPPER_CASE)
+  - key: readability-identifier-naming.ConstantCase
+    value: UPPER_CASE
+  - key: readability-identifier-naming.MacroDefinitionCase
+    value: UPPER_CASE
+

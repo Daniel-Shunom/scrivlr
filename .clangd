@@ -1,0 +1,4 @@
+CompileFlags:
+  CompilationDatabase: build/debug
+  # GCC module/dependency flags are not understood by clangd's Clang parser.
+  Remove: [-fmodules-ts, -fdeps-format=*, -fmodule-mapper=*]
