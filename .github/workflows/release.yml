@@ -1,0 +1,142 @@
+name: Build and release
+
+on:
+  push:
+    tags: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: ${{ matrix.asset }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            platform: windows
+            asset: windows-x86_64
+          - runner: ubuntu-24.04
+            platform: linux
+            asset: linux-x86_64
+          - runner: macos-15
+            platform: macos
+            asset: macos-arm64
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Windows toolchain
+        if: matrix.platform == 'windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+
+      - name: Linux toolchain
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install --yes gcc-16 g++-16 ninja-build cmake \
+            libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+          echo 'CC=gcc-16' >> "$GITHUB_ENV"
+          echo 'CXX=g++-16' >> "$GITHUB_ENV"
+
+      - name: macOS toolchain
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          brew install gcc@16 ninja
+          echo 'CC=/usr/bin/clang' >> "$GITHUB_ENV"
+          echo "CXX=$(brew --prefix gcc@16)/bin/g++-16" >> "$GITHUB_ENV"
+          echo 'MACOSX_DEPLOYMENT_TARGET=15.0' >> "$GITHUB_ENV"
+
+      - name: Build and package Windows
+        if: matrix.platform == 'windows'
+        shell: msys2 {0}
+        run: |
+          cmake -S . -B build/ci -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DBUILD_TESTING=ON \
+            -DSCRIVLR_PACKAGE_NAME=scrivlr-${{ matrix.asset }}
+          cmake --build build/ci --parallel 2
+          ctest --test-dir build/ci --output-on-failure
+          cpack --config build/ci/CPackConfig.cmake -C Release
+
+      - name: Build and package Unix
+        if: matrix.platform != 'windows'
+        shell: bash
+        run: |
+          extra=()
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            extra+=(-DGLFW_BUILD_WAYLAND=OFF)
+          else
+            extra+=(-DCMAKE_OBJC_COMPILER=/usr/bin/clang)
+          fi
+          cmake -S . -B build/ci -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_TESTING=ON -DSCRIVLR_PACKAGE_NAME=scrivlr-${{ matrix.asset }} "${extra[@]}"
+          cmake --build build/ci --parallel 2
+          ctest --test-dir build/ci --output-on-failure
+          cpack --config build/ci/CPackConfig.cmake -C Release
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.asset }}
+          path: |
+            build/ci/packages/*.zip
+            build/ci/packages/*.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          path: packages
+          merge-multiple: true
+
+      - name: Checksums
+        working-directory: packages
+        shell: bash
+        run: |
+          shopt -s nullglob
+          archives=(*.zip *.tar.gz)
+          if [[ ${#archives[@]} -ne 3 ]]; then
+            echo 'Expected all three platform archives' >&2
+            exit 1
+          fi
+          sha256sum "${archives[@]}" > SHA256SUMS.txt
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --draft \
+              --title "$RELEASE_TAG" --generate-notes
+          fi
+          gh release upload "$RELEASE_TAG" packages/* --clobber
+          gh release edit "$RELEASE_TAG" --draft=false
