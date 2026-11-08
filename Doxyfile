@@ -1,0 +1,38 @@
+# Run from the repository root: doxygen Doxyfile
+PROJECT_NAME           = scrivlr
+PROJECT_BRIEF          = "Composable native UI components built with Clay"
+OUTPUT_DIRECTORY       = build/docs
+INPUT                  = README.md docs src
+USE_MDFILE_AS_MAINPAGE  = README.md
+RECURSIVE              = YES
+FILE_PATTERNS          = *.md *.cppm *.cpp *.h
+EXTENSION_MAPPING      = cppm=C++
+EXCLUDE                = src/glad.cppm
+
+# Publish the API even while source-level documentation is being filled in.
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = NO
+HIDE_UNDOC_RELATIONS   = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_FROM_PATH        = .
+FULL_PATH_NAMES        = YES
+MARKDOWN_SUPPORT       = YES
+AUTOLINK_SUPPORT       = YES
+
+# Do not expand vendor macros or pull third-party APIs into this reference.
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+SEARCH_INCLUDES        = NO
+
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+GENERATE_TREEVIEW      = YES
+SEARCHENGINE           = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO
+QUIET                  = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+WARN_IF_DOC_ERROR      = YES
