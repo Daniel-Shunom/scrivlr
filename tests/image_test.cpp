@@ -9,7 +9,8 @@ int main() {
     using Scrivlr::Components::Image;
     auto png = Image::loadFromMemory(Scrivlr::Components::Icons::WindowIconPng);
     if (!png || png->width() <= 0 || png->height() <= 0 ||
-        png->byteSize() != static_cast<std::size_t>(png->width()) * png->height() * 4) {
+        png->byteSize() !=
+            static_cast<std::size_t>(png->width()) * png->height() * 4) {
         std::fprintf(stderr, "Embedded PNG decoding failed\n");
         return 1;
     }
@@ -35,7 +36,8 @@ int main() {
         return 6;
     }
     *jpeg = std::move(moved);
-    if (jpeg->pixels() != originalPixels || moved.pixels() || moved.byteSize() != 0) {
+    if (jpeg->pixels() != originalPixels || moved.pixels() ||
+        moved.byteSize() != 0) {
         return 7;
     }
     auto svg = Image::loadSvgFromFile("tests/assets/sample.svg", 32, 32);
@@ -48,7 +50,9 @@ int main() {
         return 9;
     }
     auto memorySvg = Image::loadSvgFromMemory(
-        "<svg width='8' height='8'><rect width='8' height='8' fill='blue'/></svg>", 8, 8);
+        "<svg width='8' height='8'><rect width='8' height='8' fill='blue'/></svg>",
+        8,
+        8);
     if (!memorySvg || memorySvg->pixels()[(4 * 8 + 4) * 4 + 2] != 255) {
         return 10;
     }
