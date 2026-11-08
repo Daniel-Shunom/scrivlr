@@ -7,8 +7,8 @@ If:
   PathMatch: .*[.](cpp|cppm|cc|cxx|hpp|hxx)
 CompileFlags:
   # Relative to the selected compilation database's build/gcc16/debug directory.
+  # Keep language standards from the database: module discovery also scans C files.
   Add:
-    - -std=c++26
     - --target=x86_64-w64-windows-gnu
     - -isystem
     - ../../../.tools/gcc16/mingw64/include/c++/16.2.0
@@ -20,7 +20,7 @@ CompileFlags:
     - ../../../.tools/gcc16/mingw64/x86_64-w64-mingw32/include
 ---
 If:
-  PathMatch: src/main[.]cpp
+  PathMatch: src/(main[.]cpp|scrivlr_lib[.]cppm|components/registry/component_registry[.]cppm)
 Diagnostics:
   # Stock clangd cannot parse GCC's C++26 reflection; GCC remains the checker.
   Suppress:
