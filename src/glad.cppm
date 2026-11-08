@@ -1131,7 +1131,8 @@ export inline auto& glBindBufferBase = glad_glBindBufferBase;
 #undef glTransformFeedbackVaryings
 export inline auto& glTransformFeedbackVaryings = glad_glTransformFeedbackVaryings;
 #undef glGetTransformFeedbackVarying
-export inline auto& glGetTransformFeedbackVarying = glad_glGetTransformFeedbackVarying;
+export inline auto& glGetTransformFeedbackVarying =
+    glad_glGetTransformFeedbackVarying;
 #undef glClampColor
 export inline auto& glClampColor = glad_glClampColor;
 #undef glBeginConditionalRender
@@ -1255,13 +1256,15 @@ export inline auto& glFramebufferTexture3D = glad_glFramebufferTexture3D;
 #undef glFramebufferRenderbuffer
 export inline auto& glFramebufferRenderbuffer = glad_glFramebufferRenderbuffer;
 #undef glGetFramebufferAttachmentParameteriv
-export inline auto& glGetFramebufferAttachmentParameteriv = glad_glGetFramebufferAttachmentParameteriv;
+export inline auto& glGetFramebufferAttachmentParameteriv =
+    glad_glGetFramebufferAttachmentParameteriv;
 #undef glGenerateMipmap
 export inline auto& glGenerateMipmap = glad_glGenerateMipmap;
 #undef glBlitFramebuffer
 export inline auto& glBlitFramebuffer = glad_glBlitFramebuffer;
 #undef glRenderbufferStorageMultisample
-export inline auto& glRenderbufferStorageMultisample = glad_glRenderbufferStorageMultisample;
+export inline auto& glRenderbufferStorageMultisample =
+    glad_glRenderbufferStorageMultisample;
 #undef glFramebufferTextureLayer
 export inline auto& glFramebufferTextureLayer = glad_glFramebufferTextureLayer;
 #undef glMapBufferRange
@@ -1303,11 +1306,14 @@ export inline auto& glUniformBlockBinding = glad_glUniformBlockBinding;
 #undef glDrawElementsBaseVertex
 export inline auto& glDrawElementsBaseVertex = glad_glDrawElementsBaseVertex;
 #undef glDrawRangeElementsBaseVertex
-export inline auto& glDrawRangeElementsBaseVertex = glad_glDrawRangeElementsBaseVertex;
+export inline auto& glDrawRangeElementsBaseVertex =
+    glad_glDrawRangeElementsBaseVertex;
 #undef glDrawElementsInstancedBaseVertex
-export inline auto& glDrawElementsInstancedBaseVertex = glad_glDrawElementsInstancedBaseVertex;
+export inline auto& glDrawElementsInstancedBaseVertex =
+    glad_glDrawElementsInstancedBaseVertex;
 #undef glMultiDrawElementsBaseVertex
-export inline auto& glMultiDrawElementsBaseVertex = glad_glMultiDrawElementsBaseVertex;
+export inline auto& glMultiDrawElementsBaseVertex =
+    glad_glMultiDrawElementsBaseVertex;
 #undef glProvokingVertex
 export inline auto& glProvokingVertex = glad_glProvokingVertex;
 #undef glFenceSync
@@ -1339,7 +1345,8 @@ export inline auto& glGetMultisamplefv = glad_glGetMultisamplefv;
 #undef glSampleMaski
 export inline auto& glSampleMaski = glad_glSampleMaski;
 #undef glBindFragDataLocationIndexed
-export inline auto& glBindFragDataLocationIndexed = glad_glBindFragDataLocationIndexed;
+export inline auto& glBindFragDataLocationIndexed =
+    glad_glBindFragDataLocationIndexed;
 #undef glGetFragDataIndex
 export inline auto& glGetFragDataIndex = glad_glGetFragDataIndex;
 #undef glGenSamplers
@@ -1505,13 +1512,16 @@ export inline auto& glUniformMatrix4x3dv = glad_glUniformMatrix4x3dv;
 #undef glGetUniformdv
 export inline auto& glGetUniformdv = glad_glGetUniformdv;
 #undef glGetSubroutineUniformLocation
-export inline auto& glGetSubroutineUniformLocation = glad_glGetSubroutineUniformLocation;
+export inline auto& glGetSubroutineUniformLocation =
+    glad_glGetSubroutineUniformLocation;
 #undef glGetSubroutineIndex
 export inline auto& glGetSubroutineIndex = glad_glGetSubroutineIndex;
 #undef glGetActiveSubroutineUniformiv
-export inline auto& glGetActiveSubroutineUniformiv = glad_glGetActiveSubroutineUniformiv;
+export inline auto& glGetActiveSubroutineUniformiv =
+    glad_glGetActiveSubroutineUniformiv;
 #undef glGetActiveSubroutineUniformName
-export inline auto& glGetActiveSubroutineUniformName = glad_glGetActiveSubroutineUniformName;
+export inline auto& glGetActiveSubroutineUniformName =
+    glad_glGetActiveSubroutineUniformName;
 #undef glGetActiveSubroutineName
 export inline auto& glGetActiveSubroutineName = glad_glGetActiveSubroutineName;
 #undef glUniformSubroutinesuiv
@@ -1539,7 +1549,8 @@ export inline auto& glResumeTransformFeedback = glad_glResumeTransformFeedback;
 #undef glDrawTransformFeedback
 export inline auto& glDrawTransformFeedback = glad_glDrawTransformFeedback;
 #undef glDrawTransformFeedbackStream
-export inline auto& glDrawTransformFeedbackStream = glad_glDrawTransformFeedbackStream;
+export inline auto& glDrawTransformFeedbackStream =
+    glad_glDrawTransformFeedbackStream;
 #undef glBeginQueryIndexed
 export inline auto& glBeginQueryIndexed = glad_glBeginQueryIndexed;
 #undef glEndQueryIndexed
@@ -3661,7 +3672,8 @@ export inline constexpr auto GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN = 0x8C88;
 #undef GL_RASTERIZER_DISCARD
 export inline constexpr auto GL_RASTERIZER_DISCARD = 0x8C89;
 #undef GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS
-export inline constexpr auto GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS = 0x8C8A;
+export inline constexpr auto GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS =
+    0x8C8A;
 #undef GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS
 export inline constexpr auto GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS = 0x8C8B;
 #undef GL_INTERLEAVED_ATTRIBS
@@ -3837,7 +3849,8 @@ export inline constexpr auto GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME = 0x8CD1;
 #undef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL
 export inline constexpr auto GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL = 0x8CD2;
 #undef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE
-export inline constexpr auto GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE = 0x8CD3;
+export inline constexpr auto GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE =
+    0x8CD3;
 #undef GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER
 export inline constexpr auto GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER = 0x8CD4;
 #undef GL_FRAMEBUFFER_COMPLETE
@@ -4453,13 +4466,17 @@ export inline constexpr auto GL_MAX_TESS_CONTROL_INPUT_COMPONENTS = 0x886C;
 #undef GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS
 export inline constexpr auto GL_MAX_TESS_EVALUATION_INPUT_COMPONENTS = 0x886D;
 #undef GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS
-export inline constexpr auto GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS = 0x8E1E;
+export inline constexpr auto GL_MAX_COMBINED_TESS_CONTROL_UNIFORM_COMPONENTS =
+    0x8E1E;
 #undef GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS
-export inline constexpr auto GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS = 0x8E1F;
+export inline constexpr auto GL_MAX_COMBINED_TESS_EVALUATION_UNIFORM_COMPONENTS =
+    0x8E1F;
 #undef GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER
-export inline constexpr auto GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER = 0x84F0;
+export inline constexpr auto GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_CONTROL_SHADER =
+    0x84F0;
 #undef GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER
-export inline constexpr auto GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER = 0x84F1;
+export inline constexpr auto GL_UNIFORM_BLOCK_REFERENCED_BY_TESS_EVALUATION_SHADER =
+    0x84F1;
 #undef GL_TESS_EVALUATION_SHADER
 export inline constexpr auto GL_TESS_EVALUATION_SHADER = 0x8E87;
 #undef GL_TESS_CONTROL_SHADER
