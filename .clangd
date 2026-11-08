@@ -6,9 +6,19 @@ CompileFlags:
 If:
   PathMatch: .*[.](cpp|cppm|cc|cxx|hpp|hxx)
 CompileFlags:
-  # Relative to the selected compilation database's build/gcc16/debug directory.
-  # Keep language standards from the database: module discovery also scans C files.
+  # New files borrow commands before CMake knows about them. clangd can drop
+  # language/standard flags while transferring those commands, so set both here.
+  # Keep these together: clangd's module scanner may also reuse this configuration
+  # for C dependencies, which would reject -std=c++26 without the language override.
+  # Include paths are relative to build/gcc16/debug (the compilation directory).
   Add:
+    - -xc++
+    - -std=c++26
+    # Editor-only Clay overlay exposes initializer types for property completion.
+    - -DSCRIVLR_CLANGD=1
+    - -I../../../tools/clangd
+    # A newly created file can borrow a C dependency's command, which lacks Clay.
+    - -I../../../vendor
     - --target=x86_64-w64-windows-gnu
     - -isystem
     - ../../../.tools/gcc16/mingw64/include/c++/16.2.0

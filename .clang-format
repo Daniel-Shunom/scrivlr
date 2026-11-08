@@ -1,7 +1,21 @@
 BasedOnStyle: LLVM
 IndentWidth: 4
-IndentAccessModifiers: true
-ColumnLimit: 100
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+ContinuationIndentWidth: 4
+BracedInitializerIndentWidth: 4
+AlignAfterOpenBracket: false
+BreakAfterOpenBracketBracedList: true
+BreakBeforeCloseBracketBracedList: true
+Cpp11BracedListStyle: FunctionCall
+BinPackLongBracedList: false
+BinPackArguments: false
+BinPackParameters: OnePerLine
+AllowShortBlocksOnASingleLine: Empty
+# CLAY expands to a one-iteration for loop with a child-layout body.
+ForEachMacros: [CLAY]
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+ColumnLimit: 85
 BreakBeforeBraces: Attach
 NamespaceIndentation: None
 PointerAlignment: Left
