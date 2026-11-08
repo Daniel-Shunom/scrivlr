@@ -1,6 +1,7 @@
 #include <clay.h>
 #include <cstdio>
 #include <exception>
+#include <cstdlib>
 #include <vector>
 
 import scrivlr_ui;
@@ -76,16 +77,23 @@ int main(int argc, char** argv) {
         }
         if (text_pixels < 10) return 5;
         if (glGetError() != GL_NO_ERROR) return 6;
-        if (argc == 2) {
+        if (argc >= 2) {
+            const int width=argc>=3 ? std::atoi(argv[2]) : 1280;
+            const int height=argc>=4 ? std::atoi(argv[3]) : 800;
+            if (width<=0 || height<=0) return 9;
             glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 640, 400, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-            ui.render({640, 400, 640, 400, -1, -1, false, 0, 0, 0.016f}, &Scrivlr::Components::buildWorkspace);
-            std::vector<unsigned char> rgb(640 * 400 * 3);
-            glReadPixels(0, 0, 640, 400, GL_RGB, GL_UNSIGNED_BYTE, rgb.data());
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            Scrivlr::Components::Workspace workspace;
+            workspace.data.width=width; workspace.data.height=height;
+            if (argc>=5) workspace.tabs.data.selected=static_cast<std::size_t>(std::atoi(argv[4]));
+            ui.render({width, height, width, height, -1, -1, false, 0, 0, 0.016f}, &Scrivlr::Components::buildWorkspace,&workspace);
+            std::vector<unsigned char> rgb(static_cast<std::size_t>(width)*height*3);
+            glPixelStorei(GL_PACK_ALIGNMENT,1);
+            glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, rgb.data());
             FILE* file = std::fopen(argv[1], "wb");
             if (!file) return 8;
-            std::fprintf(file, "P6\n640 400\n255\n");
-            for (int y = 399; y >= 0; --y) std::fwrite(rgb.data() + y * 640 * 3, 1, 640 * 3, file);
+            std::fprintf(file, "P6\n%d %d\n255\n",width,height);
+            for (int y = height-1; y >= 0; --y) std::fwrite(rgb.data() + static_cast<std::size_t>(y)*width*3, 1, static_cast<std::size_t>(width)*3, file);
             std::fclose(file);
         }
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
