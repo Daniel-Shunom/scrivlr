@@ -1,9 +1,9 @@
 module;
 
-#include <unordered_map>
 #include <memory>
-#include <utility>
 #include <meta>
+#include <unordered_map>
+#include <utility>
 export module component_registry;
 
 import components;
@@ -14,7 +14,8 @@ export namespace Scrivlr::Components {
 class ComponentRegistry {
 public:
     bool insert(ComponentID id, std::unique_ptr<Component> component) {
-        if (!component) return false;
+        if (!component)
+            return false;
         return registry.try_emplace(id, std::move(component)).second;
     }
 
@@ -34,7 +35,10 @@ public:
     std::size_t size() const { return registry.size(); }
 
 private:
-    std::unordered_map<ComponentID, std::unique_ptr<Component>, Scrivlr::StructuralHash<ComponentID>> registry;
+    std::unordered_map<ComponentID,
+        std::unique_ptr<Component>,
+        Scrivlr::StructuralHash<ComponentID>>
+        registry;
 };
 
-}
+} // namespace Scrivlr::Components

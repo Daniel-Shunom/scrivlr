@@ -1,17 +1,17 @@
 module;
 
-#include <stb_image.h>
-#include <nanosvg.h>
-#include <nanosvgrast.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <expected>
 #include <fstream>
 #include <iterator>
-#include <expected>
 #include <limits>
 #include <memory>
+#include <nanosvg.h>
+#include <nanosvgrast.h>
 #include <span>
+#include <stb_image.h>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -37,8 +37,7 @@ public:
     Image& operator=(const Image&) = delete;
 
     Image(Image&& other) noexcept
-        : pixels_(std::move(other.pixels_)),
-          width_(std::exchange(other.width_, 0)),
+        : pixels_(std::move(other.pixels_)), width_(std::exchange(other.width_, 0)),
           height_(std::exchange(other.height_, 0)) {}
 
     Image& operator=(Image&& other) noexcept {
@@ -58,7 +57,8 @@ public:
     static constexpr int channels() noexcept { return 4; }
 
     std::size_t byteSize() const noexcept {
-        return static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_) * channels();
+        return static_cast<std::size_t>(width_) * static_cast<std::size_t>(height_) *
+               channels();
     }
 
     unsigned char* pixels() noexcept { return pixels_.get(); }
@@ -67,7 +67,9 @@ public:
 
 private:
     struct PixelDeleter {
-        void operator()(unsigned char* pixels) const noexcept { stbi_image_free(pixels); }
+        void operator()(unsigned char* pixels) const noexcept {
+            stbi_image_free(pixels);
+        }
     };
 
     Image(unsigned char* pixels, int width, int height)
@@ -89,8 +91,8 @@ std::expected<Image, std::string> Image::loadFromFile(const std::string& path) {
 
     if (!pixels) {
         const char* reason = stbi_failure_reason();
-        return std::unexpected(std::string("Cannot load image '") + path + "': " +
-                               (reason ? reason : "unknown decoder error"));
+        return std::unexpected(std::string("Cannot load image '") + path +
+                               "': " + (reason ? reason : "unknown decoder error"));
     }
 
     return Image(pixels, width, height);
@@ -98,7 +100,9 @@ std::expected<Image, std::string> Image::loadFromFile(const std::string& path) {
 
 std::expected<Image, std::string> Image::loadFromMemory(
     std::span<const unsigned char> encoded_bytes) {
-    if (encoded_bytes.empty() || encoded_bytes.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
+    if (encoded_bytes.empty() ||
+        encoded_bytes.size() >
+            static_cast<std::size_t>(std::numeric_limits<int>::max())) {
         return std::unexpected(std::string("Encoded image is empty or too large"));
     }
 
@@ -106,11 +110,16 @@ std::expected<Image, std::string> Image::loadFromMemory(
 
     int height = 0;
 
-    auto* pixels = stbi_load_from_memory(encoded_bytes.data(), static_cast<int>(encoded_bytes.size()),
-                                         &width, &height, nullptr, STBI_rgb_alpha);
+    auto* pixels = stbi_load_from_memory(encoded_bytes.data(),
+        static_cast<int>(encoded_bytes.size()),
+        &width,
+        &height,
+        nullptr,
+        STBI_rgb_alpha);
     if (!pixels) {
         const char* reason = stbi_failure_reason();
-        return std::unexpected(std::string(reason ? reason : "Unknown decoder error"));
+        return std::unexpected(
+            std::string(reason ? reason : "Unknown decoder error"));
     }
 
     return Image(pixels, width, height);
@@ -139,9 +148,10 @@ std::expected<Image, std::string> Image::loadSvgFromMemory(
 
     constexpr int MAX_DIMENSION = 8192;
 
-    if (svg.empty() || width <= 0 || height <= 0 ||
-        width > MAX_DIMENSION || height > MAX_DIMENSION) {
-        return std::unexpected(std::string("SVG needs source data and dimensions between 1 and 8192"));
+    if (svg.empty() || width <= 0 || height <= 0 || width > MAX_DIMENSION ||
+        height > MAX_DIMENSION) {
+        return std::unexpected(
+            std::string("SVG needs source data and dimensions between 1 and 8192"));
     }
 
     std::string source(svg);
@@ -150,8 +160,10 @@ std::expected<Image, std::string> Image::loadSvgFromMemory(
         nsvgParse(source.data(), "px", 96.0f), &nsvgDelete);
 
     if (!document || !document->shapes || !std::isfinite(document->width) ||
-        !std::isfinite(document->height) || document->width <= 0 || document->height <= 0) {
-        return std::unexpected(std::string("SVG has no drawable shapes or valid dimensions"));
+        !std::isfinite(document->height) || document->width <= 0 ||
+        document->height <= 0) {
+        return std::unexpected(
+            std::string("SVG has no drawable shapes or valid dimensions"));
     }
 
     std::unique_ptr<NSVGrasterizer, decltype(&nsvgDeleteRasterizer)> rasterizer(
@@ -171,19 +183,27 @@ std::expected<Image, std::string> Image::loadSvgFromMemory(
     Image image(pixels, width, height);
 
     const float SCALE = std::min(static_cast<float>(width) / document->width,
-                                 static_cast<float>(height) / document->height);
+        static_cast<float>(height) / document->height);
     if (!std::isfinite(SCALE) || SCALE <= 0) {
-        return std::unexpected(std::string("SVG dimensions cannot be scaled safely"));
+        return std::unexpected(
+            std::string("SVG dimensions cannot be scaled safely"));
     }
 
     const float X = (static_cast<float>(width) - document->width * SCALE) * 0.5f;
 
     const float Y = (static_cast<float>(height) - document->height * SCALE) * 0.5f;
 
-    nsvgRasterize(rasterizer.get(), document.get(), X, Y, SCALE,
-                  image.pixels(), width, height, width * 4);
+    nsvgRasterize(rasterizer.get(),
+        document.get(),
+        X,
+        Y,
+        SCALE,
+        image.pixels(),
+        width,
+        height,
+        width * 4);
 
     return image;
 }
 
-}
+} // namespace Scrivlr::Components

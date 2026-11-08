@@ -17,6 +17,7 @@ struct Frame {
 struct Backend;
 Backend* createBackend();
 void destroyBackend(Backend*) noexcept;
-void* uploadBackendImage(Backend*, int width, int height, const unsigned char* pixels);
+void* uploadBackendImage(
+    Backend*, int width, int height, const unsigned char* pixels);
 void renderBackend(Backend*, const Frame&, void (*build)(void*), void*);
-}
+} // namespace Scrivlr::UI

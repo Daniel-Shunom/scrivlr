@@ -12,6 +12,7 @@ class ImageHandle {
 public:
     explicit ImageHandle(void* data) : data_(data) {}
     void* clayData() const { return data_; }
+
 private:
     void* data_;
 };
@@ -24,14 +25,16 @@ public:
     Renderer& operator=(const Renderer&) = delete;
 
     ImageHandle uploadImage(const Components::Image& image) {
-        return ImageHandle(uploadBackendImage(backend_, image.width(), image.height(), image.pixels()));
+        return ImageHandle(uploadBackendImage(
+            backend_, image.width(), image.height(), image.pixels()));
     }
 
-    void render(const FrameInput& frame, void (*build)(void*), void* user_data = nullptr) {
+    void render(
+        const FrameInput& frame, void (*build)(void*), void* user_data = nullptr) {
         renderBackend(backend_, frame, build, user_data);
     }
 
 private:
     Backend* backend_;
 };
-}
+} // namespace Scrivlr::UI
